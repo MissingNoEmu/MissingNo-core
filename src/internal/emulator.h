@@ -1,7 +1,7 @@
 #ifndef EMULATOR_H
 #define EMULATOR_H
 
-#include "commons.h"
+#include "MissingNo/MissingNo.h"
 #include "startup.h"
 
 typedef enum {

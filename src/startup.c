@@ -1,6 +1,6 @@
-#include "startup.h"
+#include "internal/startup.h"
 
-mn_bool startup_graphics_check(const mn_u8* ROM) {
+mn_bool mn_startup_graphics_check(const mn_u8* ROM) {
     mn_u8 sig[] = {
         0xCE,
         0xED,
@@ -61,7 +61,7 @@ mn_bool startup_graphics_check(const mn_u8* ROM) {
     return ok;
 }
 
-mn_bool startup_header_checksum(const mn_u8* ROM) {
+mn_bool mn_startup_header_checksum(const mn_u8* ROM) {
     mn_u8 x = 0;
     for (int i = 0x0134; i <= 0x014C; i++)
         x = x - ROM[i] - 1;
@@ -69,7 +69,7 @@ mn_bool startup_header_checksum(const mn_u8* ROM) {
     return x == ROM[0x14D];
 }
 
-mn_bool startup_global_checksum(const mn_u8* ROM) {
+mn_bool mn_startup_global_checksum(const mn_u8* ROM) {
     mn_u16 sum = 0;
 
     for (int i = 0; i <= 0x14D; i++)
@@ -85,14 +85,14 @@ mn_bool startup_global_checksum(const mn_u8* ROM) {
     return sum == tmp;
 }
 
-void startup_game_title(const mn_u8* ROM, char* buffer) {
+void mn_startup_game_title(const mn_u8* ROM, char* buffer) {
     for (int i = 0x134; i <= 0x142; i++)
         buffer[i - 0x134] = ROM[i];
 
     buffer[15] = '\0';
 }
 
-ROM_Type startup_ROM_type(const mn_u8* ROM) {
+ROM_Type mn_startup_ROM_type(const mn_u8* ROM) {
     switch (ROM[0x143]) {
         case 0x80:
             return DUAL;
@@ -103,7 +103,7 @@ ROM_Type startup_ROM_type(const mn_u8* ROM) {
     }
 }
 
-const char* startup_ROM_type_name(ROM_Type t) {
+const char* mn_startup_ROM_type_name(ROM_Type t) {
     static const char* names[] = {
         "Dual mode Game Boy / Game Boy Color",
         "Game Boy Color only",
@@ -113,7 +113,7 @@ const char* startup_ROM_type_name(ROM_Type t) {
     return names[t];
 }
 
-Cartridge_Type startup_cartridge_type(const mn_u8* ROM) {
+Cartridge_Type mn_startup_cartridge_type(const mn_u8* ROM) {
     switch (ROM[0x147]) {
         case 0x0:
             return ROM_ONLY;
@@ -172,7 +172,7 @@ Cartridge_Type startup_cartridge_type(const mn_u8* ROM) {
     }
 }
 
-const char* startup_cartridge_type_name(Cartridge_Type t) {
+const char* mn_startup_cartridge_type_name(Cartridge_Type t) {
     static const char* names[] = {
         "ROM_ONLY",
         "ROM_MBC1",
@@ -206,7 +206,7 @@ const char* startup_cartridge_type_name(Cartridge_Type t) {
     return names[t];
 }
 
-mn_size startup_ROM_size(const mn_u8* ROM) {
+mn_size mn_startup_ROM_size(const mn_u8* ROM) {
     switch (ROM[0x148]) {
         case 0x00: return 32 * 1024;
         case 0x01: return 64 * 1024;
@@ -226,7 +226,7 @@ mn_size startup_ROM_size(const mn_u8* ROM) {
     }
 }
 
-mn_size startup_RAM_size(const mn_u8* ROM) {
+mn_size mn_startup_RAM_size(const mn_u8* ROM) {
     switch (ROM[0x149]) {
         case 0x00: return 0;
         case 0x01: return 2 * 1024;

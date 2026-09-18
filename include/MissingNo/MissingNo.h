@@ -1,7 +1,24 @@
 #ifndef MISSING_NO_H
 #define MISSING_NO_H
 
-#include "commons.h"
+typedef unsigned char mn_u8;
+typedef unsigned short mn_u16;
+typedef unsigned long long mn_size;
+
+typedef _Bool mn_bool;
+#define MN_FALSE ((_Bool)0)
+#define MN_TRUE  ((_Bool)1)
+
+typedef struct {
+    mn_bool DPadL;
+    mn_bool DPadR;
+    mn_bool DPadU;
+    mn_bool DPadD;
+    mn_bool A;
+    mn_bool B;
+    mn_bool Select;
+    mn_bool Start;
+} MN_Inputs;
 
 typedef struct MN_Emu MissingNoCore;
 typedef MN_Inputs MissingNoInputs;

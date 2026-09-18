@@ -1,6 +1,6 @@
-#include "memory.h"
+#include "internal/memory.h"
 
-mn_u8 memory_read_memory(MN_Emu* emu, mn_u16 loc) {
+mn_u8 mn_memory_read(MN_Emu* emu, mn_u16 loc) {
     if (loc < 0x4000)
         return emu->ROM[loc];
     
@@ -38,6 +38,6 @@ mn_u8 memory_read_memory(MN_Emu* emu, mn_u16 loc) {
         return emu->interr_en;
 }
 
-void memory_write_memory(MN_Emu* emu, mn_u16 loc, mn_u8 val) {
+void mn_memory_write(MN_Emu* emu, mn_u16 loc, mn_u8 val) {
 
 }

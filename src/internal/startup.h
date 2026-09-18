@@ -1,7 +1,7 @@
 #ifndef STARTUP_H
 #define STARTUP_H
 
-#include "commons.h"
+#include "MissingNo/MissingNo.h"
 
 typedef enum {
     DUAL,
@@ -46,15 +46,15 @@ typedef enum {
     MBC5
 } MBC_Type;
 
-mn_bool startup_graphics_check(const mn_u8* ROM);
-mn_bool startup_header_checksum(const mn_u8* ROM);
-mn_bool startup_global_checksum(const mn_u8* ROM);
-void startup_game_title(const mn_u8* ROM, char* buffer);
-ROM_Type startup_ROM_type(const mn_u8* ROM);
-const char* startup_ROM_type_name(ROM_Type t);
-Cartridge_Type startup_cartridge_type(const mn_u8* ROM);
-const char* startup_cartridge_type_name(Cartridge_Type t);
-mn_size startup_ROM_size(const mn_u8* ROM);
-mn_size startup_RAM_size(const mn_u8* ROM);
+mn_bool mn_startup_graphics_check(const mn_u8* ROM);
+mn_bool mn_startup_header_checksum(const mn_u8* ROM);
+mn_bool mn_startup_global_checksum(const mn_u8* ROM);
+void mn_startup_game_title(const mn_u8* ROM, char* buffer);
+ROM_Type mn_startup_ROM_type(const mn_u8* ROM);
+const char* mn_startup_ROM_type_name(ROM_Type t);
+Cartridge_Type mn_startup_cartridge_type(const mn_u8* ROM);
+const char* mn_startup_cartridge_type_name(Cartridge_Type t);
+mn_size mn_startup_ROM_size(const mn_u8* ROM);
+mn_size mn_startup_RAM_size(const mn_u8* ROM);
 
 #endif
