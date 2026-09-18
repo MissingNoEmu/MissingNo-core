@@ -3,7 +3,7 @@
 
 typedef unsigned char mn_u8;
 typedef unsigned short mn_u16;
-typedef unsigned long mn_size;
+typedef unsigned long long mn_size;
 
 typedef _Bool mn_bool;
 #define MN_FALSE ((_Bool)0)
