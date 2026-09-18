@@ -1,7 +1,7 @@
 #include "startup.h"
 
-bool startup_graphics_check(const u8* ROM) {
-    u8 sig[] = {
+mn_bool startup_graphics_check(const mn_u8* ROM) {
+    mn_u8 sig[] = {
         0xCE,
         0xED,
         0x66,
@@ -52,25 +52,25 @@ bool startup_graphics_check(const u8* ROM) {
         0x3E
     };
 
-    bool ok = true;
+    mn_bool ok = MN_TRUE;
 
     for (int i = 0x104; i <= 0x133; i++)
         if (ROM[i] != sig[i - 0x104])
-            ok = false;
+            ok = MN_FALSE;
 
     return ok;
 }
 
-bool startup_header_checksum(const u8* ROM) {
-    u8 x = 0;
+mn_bool startup_header_checksum(const mn_u8* ROM) {
+    mn_u8 x = 0;
     for (int i = 0x0134; i <= 0x014C; i++)
         x = x - ROM[i] - 1;
 
     return x == ROM[0x14D];
 }
 
-bool startup_global_checksum(const u8* ROM) {
-    u16 sum = 0;
+mn_bool startup_global_checksum(const mn_u8* ROM) {
+    mn_u16 sum = 0;
 
     for (int i = 0; i <= 0x14D; i++)
         sum += ROM[i];
@@ -78,21 +78,21 @@ bool startup_global_checksum(const u8* ROM) {
     for (int i = 0x150; i <= 2 * 1024 * 1024; i++)
         sum += ROM[i];
 
-    u16 tmp = ROM[0x14E];
+    mn_u16 tmp = ROM[0x14E];
     tmp <<= 8;
     tmp += ROM[0x14F];
 
     return sum == tmp;
 }
 
-void startup_game_title(const u8* ROM, char* buffer) {
+void startup_game_title(const mn_u8* ROM, char* buffer) {
     for (int i = 0x134; i <= 0x142; i++)
         buffer[i - 0x134] = ROM[i];
 
     buffer[15] = '\0';
 }
 
-ROM_Type startup_ROM_type(const u8* ROM) {
+ROM_Type startup_ROM_type(const mn_u8* ROM) {
     switch (ROM[0x143]) {
         case 0x80:
             return DUAL;
@@ -113,7 +113,7 @@ const char* startup_ROM_type_name(ROM_Type t) {
     return names[t];
 }
 
-Cartridge_Type startup_cartridge_type(const u8* ROM) {
+Cartridge_Type startup_cartridge_type(const mn_u8* ROM) {
     switch (ROM[0x147]) {
         case 0x0:
             return ROM_ONLY;
@@ -206,7 +206,7 @@ const char* startup_cartridge_type_name(Cartridge_Type t) {
     return names[t];
 }
 
-size_t startup_ROM_size(const u8* ROM) {
+mn_size startup_ROM_size(const mn_u8* ROM) {
     switch (ROM[0x148]) {
         case 0x00: return 32 * 1024;
         case 0x01: return 64 * 1024;
@@ -218,15 +218,15 @@ size_t startup_ROM_size(const u8* ROM) {
         case 0x07: return 4 * 1024 * 1024;
         case 0x08: return 8 * 1024 * 1024;
 
-        case 0x52: return (size_t)(9 * 1024 * 1024) / 8;
-        case 0x53: return (size_t)(10 * 1024 * 1024) / 8;
-        case 0x54: return (size_t)(12 * 1024 * 1024) / 8;
+        case 0x52: return (mn_size)(9 * 1024 * 1024) / 8;
+        case 0x53: return (mn_size)(10 * 1024 * 1024) / 8;
+        case 0x54: return (mn_size)(12 * 1024 * 1024) / 8;
 
         default: return 0;
     }
 }
 
-size_t startup_RAM_size(const u8* ROM) {
+mn_size startup_RAM_size(const mn_u8* ROM) {
     switch (ROM[0x149]) {
         case 0x00: return 0;
         case 0x01: return 2 * 1024;

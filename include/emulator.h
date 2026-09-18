@@ -11,24 +11,25 @@ typedef enum {
     H, L
 } Regs;
 
-typedef struct {
-    u8 ROM[0x200000];
-    u8 r[8];
-    u16 SP;
-    u16 PC;
+typedef struct MN_Emu {
+    mn_u8 ROM[0x200000];
+    mn_u8 r[8];
+    mn_u16 SP;
+    mn_u16 PC;
 
-    u8 internal_mem[0x2000];
-    u8 sec_internal_mem[0x7F];
-    u8 cart_mem[0x20000];
-    u8 VRAM[0x2000];
-    u8 IO[0x7F];
-    u8 SAB[0xA0];
-    u8 interr_en;
+    mn_u8 internal_mem[0x2000];
+    mn_u8 sec_internal_mem[0x7F];
+    mn_u8 cart_mem[0x20000];
+    mn_u8 VRAM[0x2000];
+    mn_u8 IO[0x7F];
+    mn_u8 SAB[0xA0];
+    mn_u8 interr_en;
 
     MBC_Type mbc_type;
     
-    u16 ROM_bank;
-    u16 RAM_bank;
-} Emu;
+    mn_u16 ROM_bank;
+    mn_u16 RAM_bank;
+} MN_Emu;
+
 
 #endif

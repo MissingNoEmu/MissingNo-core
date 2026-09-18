@@ -4,7 +4,7 @@
 #include "commons.h"
 #include "emulator.h"
 
-u8 read_memory(Emu* emu, u16 loc);
-void write_memory(Emu* emu, u16 loc, u8 val);
+mn_u8 read_memory(MN_Emu* emu, mn_u16 loc);
+void write_memory(MN_Emu* emu, mn_u16 loc, mn_u8 val);
 
 #endif
