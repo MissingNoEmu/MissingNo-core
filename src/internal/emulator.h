@@ -16,6 +16,7 @@ typedef struct MN_Emu {
     mn_u8 r[8];
     mn_u16 SP;
     mn_u16 PC;
+    mn_size cycles;
 
     mn_u8 internal_mem[0x2000];
     mn_u8 sec_internal_mem[0x7F];
