@@ -499,6 +499,33 @@ void execute(MN_Emu *emu, mn_u8 opcode)
       break;
 
     // CP n
+    case 0xBF:
+      MN_CP_r(A);
+      break;
+    case 0xB8:
+      MN_CP_r(B);
+      break;
+    case 0xB9:
+      MN_CP_r(C);
+      break;
+    case 0xBA:
+      MN_CP_r(D);
+      break;
+    case 0xBB:
+      MN_CP_r(E);
+      break;
+    case 0xBC:
+      MN_CP_r(H);
+      break;
+    case 0xBD:
+      MN_CP_r(L);
+      break;
+    case 0xBE:
+      MN_CP_HL();
+      break;
+    case 0xFE:
+      MN_CP_n();
+      break;
     }
 
     // 16 bit ALU

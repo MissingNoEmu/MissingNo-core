@@ -199,7 +199,7 @@
       emu->r[F] |= (1 << 7);                     \
     emu->cycles += 8;                            \
   }
-#define MN_XOR_r(src)          \
+#define MN_XOR_r(src)         \
   {                           \
     emu->r[A] ^= emu->r[src]; \
     emu->r[F] = 0;            \
@@ -207,7 +207,7 @@
       emu->r[F] |= (1 << 7);  \
     emu->cycles += 4;         \
   }
-#define MN_XOR_HL()                                         \
+#define MN_XOR_HL()                                        \
   {                                                        \
     emu->r[A] ^= mn_memory_read(emu, get_pair(emu, H, L)); \
     emu->r[F] = 0;                                         \
@@ -215,12 +215,53 @@
       emu->r[F] |= (1 << 7);                               \
     emu->cycles += 8;                                      \
   }
-#define MN_XOR_n()                                \
+#define MN_XOR_n()                               \
   {                                              \
     emu->r[A] ^= mn_memory_read(emu, emu->PC++); \
     emu->r[F] = 0;                               \
     if (emu->r[A] == 0)                          \
       emu->r[F] |= (1 << 7);                     \
     emu->cycles += 8;                            \
+  }
+
+#define MN_CP_r(src)                               \
+  {                                                \
+    emu->r[F] = 0;                                 \
+    if (emu->r[A] == emu->r[src])                  \
+      emu->r[F] |= (1 << 7);                       \
+    emu->r[F] |= (1 << 6);                         \
+    if (emu->r[A] < emu->r[src])                   \
+      emu->r[F] |= (1 << 4);                       \
+    if ((emu->r[A] & 0x0F) < (emu->r[src] & 0x0F)) \
+      emu->r[F] |= (1 << 5);                       \
+                                                   \
+    emu->cycles += 4;                              \
+  }
+#define MN_CP_HL()                                      \
+  {                                                     \
+    emu->r[F] = 0;                                      \
+    mn_u8 b = mn_memory_read(emu, get_pair(emu, H, L)); \
+    if (emu->r[A] == b)                                 \
+      emu->r[F] |= (1 << 7);                            \
+    emu->r[F] |= (1 << 6);                              \
+    if (emu->r[A] < b)                                  \
+      emu->r[F] |= (1 << 4);                            \
+    if ((emu->r[A] & 0x0F) < (b & 0x0F))                \
+      emu->r[F] |= (1 << 5);                            \
+                                                        \
+    emu->cycles += 8;                                   \
+  }
+#define MN_CP_n()                             \
+  {                                           \
+    emu->r[F] = 0;                            \
+    mn_u8 b = mn_memory_read(emu, emu->PC++); \
+    if (emu->r[A] == b)                       \
+      emu->r[F] |= (1 << 7);                  \
+    emu->r[F] |= (1 << 6);                    \
+    if (emu->r[A] < b)                        \
+      emu->r[F] |= (1 << 4);                  \
+    if ((emu->r[A] & 0x0F) < (b & 0x0F))      \
+      emu->r[F] |= (1 << 5);                  \
+    emu->cycles += 8;                         \
   }
 #endif
