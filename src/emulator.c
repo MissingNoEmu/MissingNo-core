@@ -2,7 +2,7 @@
 #include "internal/memory.h"
 #include "internal/opcodes.h"
 
-mn_u16 get_pair(MN_Emu *emu, mn_u8 h, mn_u8 l)
+mn_u16 mn_get_pair(MN_Emu *emu, mn_u8 h, mn_u8 l)
 {
   return (emu->r[h] << 8) | emu->r[l];
 }
@@ -205,7 +205,7 @@ void execute(MN_Emu *emu, mn_u8 opcode)
       MN_LD_HL_r(L);
       break;
     case 0x36:
-      mn_memory_write(emu, get_pair(emu, H, L), mn_memory_read(emu, emu->PC++));
+      mn_memory_write(emu, mn_get_pair(emu, H, L), mn_memory_read(emu, emu->PC++));
       emu->cycles += 12;
       break;
 
@@ -526,9 +526,64 @@ void execute(MN_Emu *emu, mn_u8 opcode)
     case 0xFE:
       MN_CP_n();
       break;
+
+    // INC n
+    case 0x3C:
+      MN_INC_r(A);
+      break;
+    case 0x04:
+      MN_INC_r(B);
+      break;
+    case 0x0C:
+      MN_INC_r(C);
+      break;
+    case 0x14:
+      MN_INC_r(D);
+      break;
+    case 0x1C:
+      MN_INC_r(E);
+      break;
+    case 0x24:
+      MN_INC_r(H);
+      break;
+    case 0x2C:
+      MN_INC_r(L);
+      break;
+    case 0x34:
+      MN_INC_HL();
+      break;
+
+    // DEC n
+    case 0x3D:
+      MN_DEC_r(A);
+      break;
+    case 0x05:
+      MN_DEC_r(B);
+      break;
+    case 0x0D:
+      MN_DEC_r(C);
+      break;
+    case 0x15:
+      MN_DEC_r(D);
+      break;
+    case 0x1D:
+      MN_DEC_r(E);
+      break;
+    case 0x25:
+      MN_DEC_r(H);
+      break;
+    case 0x2D:
+      MN_DEC_r(L);
+      break;
+    case 0x35:
+      MN_DEC_HL();
+      break;
     }
 
     // 16 bit ALU
+    {
+    }
+    // Random shi (misc)
     {
     }
   }
