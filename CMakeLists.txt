@@ -10,6 +10,7 @@ add_library(MissingNo STATIC
     src/emulator.c
     src/memory.c
     src/startup.c
+    src/mbc.c
 )
 
 add_library(MissingNo::MissingNo ALIAS MissingNo)
