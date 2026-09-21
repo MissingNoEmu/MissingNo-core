@@ -578,8 +578,130 @@ void mn_emulator_execute(MN_Emu *emu, mn_u8 opcode)
     // 16 bit ALU
     {
     }
-    // Random shi (misc)
+    
     {
+    case 0xCB:
+      // 16 bit opcode idk kaise karte
+      break;
+
+    case 0x27:
+      MN_DAA();
+      break;
+    case 0x2F:
+      MN_CPL();
+      break;
+    case 0x3F:
+      MN_CCF();
+      break;
+    case 0x37:
+      MN_SCF();
+      break;
+    case 0x00:
+      MN_NOP();
+      break;
+    case 0x76:
+      MN_HALT();
+      break;
+    case 0x10:
+      // 16 bit opcode idk kaise karte
+      break;
+    case 0xF3:
+      MN_DI();
+      break;
+    case 0xFB:
+      MN_EI();
+      break;
+
+    // Moment of inertia about the axis of a disc about its center of mass is given by the formula I = (1/2) * m * r^2, where m is the mass of the disc and r is its radius. This formula assumes that the disc is uniform and thin, and that the axis of rotation passes through its center and is perpendicular to its plane.
+    // Rotation love
+    case 0x07:
+      MN_RLCA();
+      break;
+    case 0x17:
+      MN_RLA();
+      break;
+    case 0x0F:
+      MN_RRCA();
+      break;
+    case 0x1F:
+      MN_RRA();
+      break;
+    // rest are 16 bit opcodes of 0xCB
+
+    // Bit also 16 bit opcodes of 0xCB
+
+    // Jumps
+    case 0xC3:
+      MN_JP_nn();
+      break;
+    case 0xC2:
+      MN_JP_NZ_nn();
+      break;
+    case 0xCA:
+      MN_JP_Z_nn();
+      break;
+    case 0xD2:
+      MN_JP_NC_nn();
+      break;
+    case 0xDA:
+      MN_JP_C_nn();
+      break;
+    case 0xE9:
+      MN_JP_HL();
+      break;
+
+    case 0x18:
+      MN_JR_n();
+      break;
+    case 0x20:
+      MN_JR_NZ_n();
+      break;
+    case 0x28:
+      MN_JR_Z_n();
+      break;
+    case 0x30:
+      MN_JR_NC_n();
+      break;
+    case 0x38:
+      MN_JR_C_n();
+      break;
+
+    // callz
+    case 0xCD:
+      MN_CALL_nn();
+      break;
+
+    case 0xC4:
+      MN_CALL_NZ_nn();
+      break;
+    case 0xCC:
+      MN_CALL_Z_nn();
+    case 0xD4:
+      MN_CALL_NC_nn();
+      break;
+    case 0xDC:
+      MN_CALL_C_nn();
+      break;
+
+    // RST sm crazy shi
+    case 0xC9:
+      MN_RET();
+      break;
+    case 0xC0:
+      MN_RET_NZ();
+      break;
+    case 0xC8:
+      MN_RET_Z();
+      break;
+    case 0xD0:
+      MN_RET_NC();
+      break;
+    case 0xD8:
+      MN_RET_C();
+      break;
+    case 0xD9:
+      MN_RETI();
+      break;
     }
   }
 }
