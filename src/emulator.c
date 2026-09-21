@@ -2,11 +2,6 @@
 #include "internal/memory.h"
 #include "internal/opcodes.h"
 
-mn_u16 mn_get_pair(MN_Emu *emu, mn_u8 h, mn_u8 l)
-{
-  return (emu->r[h] << 8) | emu->r[l];
-}
-
 void execute(MN_Emu *emu, mn_u8 opcode)
 {
   switch (opcode)
@@ -15,282 +10,282 @@ void execute(MN_Emu *emu, mn_u8 opcode)
     {
     // LD nn, n
     case 0x06:
-      MN_LD_nn_n(B);
+      MN_LD_nn_n(MN_Regs_B);
       break;
     case 0x0E:
-      MN_LD_nn_n(C);
+      MN_LD_nn_n(MN_Regs_C);
       break;
     case 0x16:
-      MN_LD_nn_n(D);
+      MN_LD_nn_n(MN_Regs_D);
       break;
     case 0x1E:
-      MN_LD_nn_n(E);
+      MN_LD_nn_n(MN_Regs_E);
       break;
     case 0x26:
-      MN_LD_nn_n(H);
+      MN_LD_nn_n(MN_Regs_H);
       break;
     case 0x2E:
-      MN_LD_nn_n(L);
+      MN_LD_nn_n(MN_Regs_L);
       break;
 
     // LD r1, r2
     case 0x7F:
       // they js makin random bs
-      MN_LD_r1_r2(A, A);
+      MN_LD_r1_r2(MN_Regs_A, MN_Regs_A);
       break;
     case 0x78:
-      MN_LD_r1_r2(A, B);
+      MN_LD_r1_r2(MN_Regs_A, MN_Regs_B);
       break;
     case 0x79:
-      MN_LD_r1_r2(A, C);
+      MN_LD_r1_r2(MN_Regs_A, MN_Regs_C);
       break;
     case 0x7A:
-      MN_LD_r1_r2(A, D);
+      MN_LD_r1_r2(MN_Regs_A, MN_Regs_D);
       break;
     case 0x7B:
-      MN_LD_r1_r2(A, E);
+      MN_LD_r1_r2(MN_Regs_A, MN_Regs_E);
       break;
     case 0x7C:
-      MN_LD_r1_r2(A, H);
+      MN_LD_r1_r2(MN_Regs_A, MN_Regs_H);
       break;
     case 0x7D:
-      MN_LD_r1_r2(A, L);
+      MN_LD_r1_r2(MN_Regs_A, MN_Regs_L);
       break;
     case 0x7E:
-      MN_LD_r_HL(A);
+      MN_LD_r_HL(MN_Regs_A);
       break;
     case 0x40:
-      MN_LD_r1_r2(B, B);
+      MN_LD_r1_r2(MN_Regs_B, MN_Regs_B);
       break;
     case 0x41:
-      MN_LD_r1_r2(B, C);
+      MN_LD_r1_r2(MN_Regs_B, MN_Regs_C);
       break;
     case 0x42:
-      MN_LD_r1_r2(B, D);
+      MN_LD_r1_r2(MN_Regs_B, MN_Regs_D);
       break;
     case 0x43:
-      MN_LD_r1_r2(B, E);
+      MN_LD_r1_r2(MN_Regs_B, MN_Regs_E);
       break;
     case 0x44:
-      MN_LD_r1_r2(B, H);
+      MN_LD_r1_r2(MN_Regs_B, MN_Regs_H);
       break;
     case 0x45:
-      MN_LD_r1_r2(B, L);
+      MN_LD_r1_r2(MN_Regs_B, MN_Regs_L);
       break;
     case 0x46:
-      MN_LD_r_HL(B);
+      MN_LD_r_HL(MN_Regs_B);
       break;
     case 0x48:
-      MN_LD_r1_r2(C, B);
+      MN_LD_r1_r2(MN_Regs_C, MN_Regs_B);
       break;
     case 0x49:
-      MN_LD_r1_r2(C, C);
+      MN_LD_r1_r2(MN_Regs_C, MN_Regs_C);
       break;
     case 0x4A:
-      MN_LD_r1_r2(C, D);
+      MN_LD_r1_r2(MN_Regs_C, MN_Regs_D);
       break;
     case 0x4B:
-      MN_LD_r1_r2(C, E);
+      MN_LD_r1_r2(MN_Regs_C, MN_Regs_E);
       break;
     case 0x4C:
-      MN_LD_r1_r2(C, H);
+      MN_LD_r1_r2(MN_Regs_C, MN_Regs_H);
       break;
     case 0x4D:
-      MN_LD_r1_r2(C, L);
+      MN_LD_r1_r2(MN_Regs_C, MN_Regs_L);
       break;
     case 0x4E:
-      MN_LD_r_HL(C);
+      MN_LD_r_HL(MN_Regs_C);
       break;
     case 0x50:
-      MN_LD_r1_r2(D, B);
+      MN_LD_r1_r2(MN_Regs_D, MN_Regs_B);
       break;
     case 0x51:
-      MN_LD_r1_r2(D, C);
+      MN_LD_r1_r2(MN_Regs_D, MN_Regs_C);
       break;
     case 0x52:
-      MN_LD_r1_r2(D, D);
+      MN_LD_r1_r2(MN_Regs_D, MN_Regs_D);
       break;
     case 0x53:
-      MN_LD_r1_r2(D, E);
+      MN_LD_r1_r2(MN_Regs_D, MN_Regs_E);
       break;
     case 0x54:
-      MN_LD_r1_r2(D, H);
+      MN_LD_r1_r2(MN_Regs_D, MN_Regs_H);
       break;
     case 0x55:
-      MN_LD_r1_r2(D, L);
+      MN_LD_r1_r2(MN_Regs_D, MN_Regs_L);
       break;
     case 0x56:
-      MN_LD_r_HL(D);
+      MN_LD_r_HL(MN_Regs_D);
       break;
     case 0x58:
-      MN_LD_r1_r2(E, B);
+      MN_LD_r1_r2(MN_Regs_E, MN_Regs_B);
       break;
     case 0x59:
-      MN_LD_r1_r2(E, C);
+      MN_LD_r1_r2(MN_Regs_E, MN_Regs_C);
       break;
     case 0x5A:
-      MN_LD_r1_r2(E, D);
+      MN_LD_r1_r2(MN_Regs_E, MN_Regs_D);
       break;
     case 0x5B:
-      MN_LD_r1_r2(E, E);
+      MN_LD_r1_r2(MN_Regs_E, MN_Regs_E);
       break;
     case 0x5C:
-      MN_LD_r1_r2(E, H);
+      MN_LD_r1_r2(MN_Regs_E, MN_Regs_H);
       break;
     case 0x5D:
-      MN_LD_r1_r2(E, L);
+      MN_LD_r1_r2(MN_Regs_E, MN_Regs_L);
       break;
     case 0x5E:
-      MN_LD_r_HL(E);
+      MN_LD_r_HL(MN_Regs_E);
       break;
     case 0x60:
-      MN_LD_r1_r2(H, B);
+      MN_LD_r1_r2(MN_Regs_H, MN_Regs_B);
       break;
     case 0x61:
-      MN_LD_r1_r2(H, C);
+      MN_LD_r1_r2(MN_Regs_H, MN_Regs_C);
       break;
     case 0x62:
-      MN_LD_r1_r2(H, D);
+      MN_LD_r1_r2(MN_Regs_H, MN_Regs_D);
       break;
     case 0x63:
-      MN_LD_r1_r2(H, E);
+      MN_LD_r1_r2(MN_Regs_H, MN_Regs_E);
       break;
     case 0x64:
-      MN_LD_r1_r2(H, H);
+      MN_LD_r1_r2(MN_Regs_H, MN_Regs_H);
       break;
     case 0x65:
-      MN_LD_r1_r2(H, L);
+      MN_LD_r1_r2(MN_Regs_H, MN_Regs_L);
       break;
     case 0x66:
-      MN_LD_r_HL(H);
+      MN_LD_r_HL(MN_Regs_H);
       break;
     case 0x68:
-      MN_LD_r1_r2(L, B);
+      MN_LD_r1_r2(MN_Regs_L, MN_Regs_B);
       break;
     case 0x69:
-      MN_LD_r1_r2(L, C);
+      MN_LD_r1_r2(MN_Regs_L, MN_Regs_C);
       break;
     case 0x6A:
-      MN_LD_r1_r2(L, D);
+      MN_LD_r1_r2(MN_Regs_L, MN_Regs_D);
       break;
     case 0x6B:
-      MN_LD_r1_r2(L, E);
+      MN_LD_r1_r2(MN_Regs_L, MN_Regs_E);
       break;
     case 0x6C:
-      MN_LD_r1_r2(L, H);
+      MN_LD_r1_r2(MN_Regs_L, MN_Regs_H);
       break;
     case 0x6D:
-      MN_LD_r1_r2(L, L);
+      MN_LD_r1_r2(MN_Regs_L, MN_Regs_L);
       break;
     case 0x6E:
-      MN_LD_r_HL(L);
+      MN_LD_r_HL(MN_Regs_L);
       break;
     // write
     case 0x70:
-      MN_LD_HL_r(B);
+      MN_LD_HL_r(MN_Regs_B);
       break;
     case 0x71:
-      MN_LD_HL_r(C);
+      MN_LD_HL_r(MN_Regs_C);
       break;
     case 0x72:
-      MN_LD_HL_r(D);
+      MN_LD_HL_r(MN_Regs_D);
       break;
     case 0x73:
-      MN_LD_HL_r(E);
+      MN_LD_HL_r(MN_Regs_E);
       break;
     case 0x74:
-      MN_LD_HL_r(H);
+      MN_LD_HL_r(MN_Regs_H);
       break;
     case 0x75:
-      MN_LD_HL_r(L);
+      MN_LD_HL_r(MN_Regs_L);
       break;
     case 0x36:
-      mn_memory_write(emu, mn_get_pair(emu, H, L), mn_memory_read(emu, emu->PC++));
+      mn_memory_write(emu, MN_GET_PAIR(emu, MN_Regs_H, MN_Regs_L), mn_memory_read(emu, emu->PC++));
       emu->cycles += 12;
       break;
 
-    // LD A, n
+    // LD MN_Regs_A, n
     case 0x0A:
-      MN_LD_r_BC(A);
+      MN_LD_r_BC(MN_Regs_A);
       break;
     case 0x1A:
-      MN_LD_r_DE(A);
+      MN_LD_r_DE(MN_Regs_A);
       break;
     case 0xFA:
       // DDyansh pls help here
       break;
 
-    // LD (nn), A
+    // LD (nn), MN_Regs_A
     case 0x47:
-      MN_LD_r1_r2(B, A);
+      MN_LD_r1_r2(MN_Regs_B, MN_Regs_A);
       break;
     case 0x4F:
-      MN_LD_r1_r2(C, A);
+      MN_LD_r1_r2(MN_Regs_C, MN_Regs_A);
       break;
     case 0x57:
-      MN_LD_r1_r2(D, A);
+      MN_LD_r1_r2(MN_Regs_D, MN_Regs_A);
       break;
     case 0x5F:
-      MN_LD_r1_r2(E, A);
+      MN_LD_r1_r2(MN_Regs_E, MN_Regs_A);
       break;
     case 0x67:
-      MN_LD_r1_r2(H, A);
+      MN_LD_r1_r2(MN_Regs_H, MN_Regs_A);
       break;
     case 0x6F:
-      MN_LD_r1_r2(L, A);
+      MN_LD_r1_r2(MN_Regs_L, MN_Regs_A);
       break;
     case 0x02:
-      MN_LD_BC_r(A);
+      MN_LD_BC_r(MN_Regs_A);
       break;
     case 0x12:
-      MN_LD_DE_r(A);
+      MN_LD_DE_r(MN_Regs_A);
       break;
     case 0x77:
-      MN_LD_HL_r(A);
+      MN_LD_HL_r(MN_Regs_A);
       break;
     case 0xEA:
       // (nn) walo ka aap dekhlo dots
       emu->cycles += 16;
       break;
 
-    // LD A,(C)
+    // LD MN_Regs_A,(MN_Regs_C)
     case 0xF2:
-      emu->r[A] = mn_memory_read(emu, 0xFF00 + emu->r[C]);
+      emu->r[MN_Regs_A] = mn_memory_read(emu, 0xFF00 + emu->r[MN_Regs_C]);
       emu->cycles += 8;
       break;
 
-    // LD (C),A
+    // LD (MN_Regs_C),MN_Regs_A
     case 0xE2:
-      mn_memory_write(emu, 0xFF00 + emu->r[C], emu->r[A]);
+      mn_memory_write(emu, 0xFF00 + emu->r[MN_Regs_C], emu->r[MN_Regs_A]);
       emu->cycles += 8;
       break;
 
-    // LDD A,(HL) | LD A,(HLD) | LD A,(HL-)
+    // LDD MN_Regs_A,(HL) | LD MN_Regs_A,(HLD) | LD MN_Regs_A,(HL-)
     case 0x3A:
       // incomplete ALU
       break;
-    // LDD (HL),A | LD (HLD),A | LD (HL-),A
+    // LDD (HL),MN_Regs_A | LD (HLD),MN_Regs_A | LD (HL-),MN_Regs_A
     case 0x32:
       // incomplete
       break;
-    // LDI A,(HL) | LD A,(HLI) | LD A,(HL+)
+    // LDI MN_Regs_A,(HL) | LD MN_Regs_A,(HLI) | LD MN_Regs_A,(HL+)
     case 0x2A:
       // incomplete
       break;
-    // LDI (HL),A | LD (HL),A | LD (HL+),A
+    // LDI (HL),MN_Regs_A | LD (HL),MN_Regs_A | LD (HL+),MN_Regs_A
     case 0x22:
       // incomplete
       break;
 
-    // LDH (n),A
+    // LDH (n),MN_Regs_A
     case 0xE0:
-      mn_memory_write(emu, 0xFF00 + mn_memory_read(emu, emu->PC++), emu->r[A]);
+      mn_memory_write(emu, 0xFF00 + mn_memory_read(emu, emu->PC++), emu->r[MN_Regs_A]);
       emu->cycles += 12;
       break;
 
-    // LDH A,(n)
+    // LDH MN_Regs_A,(n)
     case 0xF0:
-      emu->r[A] = mn_memory_read(emu, 0xFF00 + mn_memory_read(emu, emu->PC++));
+      emu->r[MN_Regs_A] = mn_memory_read(emu, 0xFF00 + mn_memory_read(emu, emu->PC++));
       emu->cycles += 12;
       break;
     }
@@ -303,25 +298,25 @@ void execute(MN_Emu *emu, mn_u8 opcode)
     {
     // ADD n
     case 0x87:
-      MN_ADD_r(A);
+      MN_ADD_r(MN_Regs_A);
       break;
     case 0x80:
-      MN_ADD_r(B);
+      MN_ADD_r(MN_Regs_B);
       break;
     case 0x81:
-      MN_ADD_r(C);
+      MN_ADD_r(MN_Regs_C);
       break;
     case 0x82:
-      MN_ADD_r(D);
+      MN_ADD_r(MN_Regs_D);
       break;
     case 0x83:
-      MN_ADD_r(E);
+      MN_ADD_r(MN_Regs_E);
       break;
     case 0x84:
-      MN_ADD_r(H);
+      MN_ADD_r(MN_Regs_H);
       break;
     case 0x85:
-      MN_ADD_r(L);
+      MN_ADD_r(MN_Regs_L);
       break;
     case 0x86:
       MN_ADD_HL();
@@ -329,27 +324,27 @@ void execute(MN_Emu *emu, mn_u8 opcode)
     case 0xC6:
       MN_ADD_n();
       break;
-    // ADC A, n
+    // ADC MN_Regs_A, n
     case 0x8F:
-      MN_ADC_r(A);
+      MN_ADC_r(MN_Regs_A);
       break;
     case 0x88:
-      MN_ADC_r(B);
+      MN_ADC_r(MN_Regs_B);
       break;
     case 0x89:
-      MN_ADC_r(C);
+      MN_ADC_r(MN_Regs_C);
       break;
     case 0x8A:
-      MN_ADC_r(D);
+      MN_ADC_r(MN_Regs_D);
       break;
     case 0x8B:
-      MN_ADC_r(E);
+      MN_ADC_r(MN_Regs_E);
       break;
     case 0x8C:
-      MN_ADC_r(H);
+      MN_ADC_r(MN_Regs_H);
       break;
     case 0x8D:
-      MN_ADC_r(L);
+      MN_ADC_r(MN_Regs_L);
       break;
     case 0x8E:
       MN_ADC_HL();
@@ -360,25 +355,25 @@ void execute(MN_Emu *emu, mn_u8 opcode)
 
     // SUB n
     case 0x97:
-      MN_SUB_r(A);
+      MN_SUB_r(MN_Regs_A);
       break;
     case 0x90:
-      MN_SUB_r(B);
+      MN_SUB_r(MN_Regs_B);
       break;
     case 0x91:
-      MN_SUB_r(C);
+      MN_SUB_r(MN_Regs_C);
       break;
     case 0x92:
-      MN_SUB_r(D);
+      MN_SUB_r(MN_Regs_D);
       break;
     case 0x93:
-      MN_SUB_r(E);
+      MN_SUB_r(MN_Regs_E);
       break;
     case 0x94:
-      MN_SUB_r(H);
+      MN_SUB_r(MN_Regs_H);
       break;
     case 0x95:
-      MN_SUB_r(L);
+      MN_SUB_r(MN_Regs_L);
       break;
     case 0x96:
       MN_SUB_HL();
@@ -389,22 +384,22 @@ void execute(MN_Emu *emu, mn_u8 opcode)
 
     // SBC
     case 0x9F:
-      MN_SBC_r(A);
+      MN_SBC_r(MN_Regs_A);
       break;
     case 0x98:
-      MN_SBC_r(B);
+      MN_SBC_r(MN_Regs_B);
       break;
     case 0x9A:
-      MN_SBC_r(D);
+      MN_SBC_r(MN_Regs_D);
       break;
     case 0x9B:
-      MN_SBC_r(E);
+      MN_SBC_r(MN_Regs_E);
       break;
     case 0x9C:
-      MN_SBC_r(H);
+      MN_SBC_r(MN_Regs_H);
       break;
     case 0x9D:
-      MN_SBC_r(L);
+      MN_SBC_r(MN_Regs_L);
       break;
     case 0x9E:
       MN_SBC_HL();
@@ -413,25 +408,25 @@ void execute(MN_Emu *emu, mn_u8 opcode)
 
     // AND n
     case 0xA7:
-      MN_AND_r(A);
+      MN_AND_r(MN_Regs_A);
       break;
     case 0xA0:
-      MN_AND_r(B);
+      MN_AND_r(MN_Regs_B);
       break;
     case 0xA1:
-      MN_AND_r(C);
+      MN_AND_r(MN_Regs_C);
       break;
     case 0xA2:
-      MN_AND_r(D);
+      MN_AND_r(MN_Regs_D);
       break;
     case 0xA3:
-      MN_AND_r(E);
+      MN_AND_r(MN_Regs_E);
       break;
     case 0xA4:
-      MN_AND_r(H);
+      MN_AND_r(MN_Regs_H);
       break;
     case 0xA5:
-      MN_AND_r(L);
+      MN_AND_r(MN_Regs_L);
       break;
     case 0xA6:
       MN_AND_HL();
@@ -442,25 +437,25 @@ void execute(MN_Emu *emu, mn_u8 opcode)
 
     // OR n
     case 0xB7:
-      MN_OR_r(A);
+      MN_OR_r(MN_Regs_A);
       break;
     case 0xB0:
-      MN_OR_r(B);
+      MN_OR_r(MN_Regs_B);
       break;
     case 0xB1:
-      MN_OR_r(C);
+      MN_OR_r(MN_Regs_C);
       break;
     case 0xB2:
-      MN_OR_r(D);
+      MN_OR_r(MN_Regs_D);
       break;
     case 0xB3:
-      MN_OR_r(E);
+      MN_OR_r(MN_Regs_E);
       break;
     case 0xB4:
-      MN_OR_r(H);
+      MN_OR_r(MN_Regs_H);
       break;
     case 0xB5:
-      MN_OR_r(L);
+      MN_OR_r(MN_Regs_L);
       break;
     case 0xB6:
       MN_OR_HL();
@@ -471,25 +466,25 @@ void execute(MN_Emu *emu, mn_u8 opcode)
 
     // XOR n
     case 0xAF:
-      MN_XOR_r(A);
+      MN_XOR_r(MN_Regs_A);
       break;
     case 0xA8:
-      MN_XOR_r(B);
+      MN_XOR_r(MN_Regs_B);
       break;
     case 0xA9:
-      MN_XOR_r(C);
+      MN_XOR_r(MN_Regs_C);
       break;
     case 0xAA:
-      MN_XOR_r(D);
+      MN_XOR_r(MN_Regs_D);
       break;
     case 0xAB:
-      MN_XOR_r(E);
+      MN_XOR_r(MN_Regs_E);
       break;
     case 0xAC:
-      MN_XOR_r(H);
+      MN_XOR_r(MN_Regs_H);
       break;
     case 0xAD:
-      MN_XOR_r(L);
+      MN_XOR_r(MN_Regs_L);
       break;
     case 0xAE:
       MN_XOR_HL();
@@ -500,25 +495,25 @@ void execute(MN_Emu *emu, mn_u8 opcode)
 
     // CP n
     case 0xBF:
-      MN_CP_r(A);
+      MN_CP_r(MN_Regs_A);
       break;
     case 0xB8:
-      MN_CP_r(B);
+      MN_CP_r(MN_Regs_B);
       break;
     case 0xB9:
-      MN_CP_r(C);
+      MN_CP_r(MN_Regs_C);
       break;
     case 0xBA:
-      MN_CP_r(D);
+      MN_CP_r(MN_Regs_D);
       break;
     case 0xBB:
-      MN_CP_r(E);
+      MN_CP_r(MN_Regs_E);
       break;
     case 0xBC:
-      MN_CP_r(H);
+      MN_CP_r(MN_Regs_H);
       break;
     case 0xBD:
-      MN_CP_r(L);
+      MN_CP_r(MN_Regs_L);
       break;
     case 0xBE:
       MN_CP_HL();
@@ -529,25 +524,25 @@ void execute(MN_Emu *emu, mn_u8 opcode)
 
     // INC n
     case 0x3C:
-      MN_INC_r(A);
+      MN_INC_r(MN_Regs_A);
       break;
     case 0x04:
-      MN_INC_r(B);
+      MN_INC_r(MN_Regs_B);
       break;
     case 0x0C:
-      MN_INC_r(C);
+      MN_INC_r(MN_Regs_C);
       break;
     case 0x14:
-      MN_INC_r(D);
+      MN_INC_r(MN_Regs_D);
       break;
     case 0x1C:
-      MN_INC_r(E);
+      MN_INC_r(MN_Regs_E);
       break;
     case 0x24:
-      MN_INC_r(H);
+      MN_INC_r(MN_Regs_H);
       break;
     case 0x2C:
-      MN_INC_r(L);
+      MN_INC_r(MN_Regs_L);
       break;
     case 0x34:
       MN_INC_HL();
@@ -555,25 +550,25 @@ void execute(MN_Emu *emu, mn_u8 opcode)
 
     // DEC n
     case 0x3D:
-      MN_DEC_r(A);
+      MN_DEC_r(MN_Regs_A);
       break;
     case 0x05:
-      MN_DEC_r(B);
+      MN_DEC_r(MN_Regs_B);
       break;
     case 0x0D:
-      MN_DEC_r(C);
+      MN_DEC_r(MN_Regs_C);
       break;
     case 0x15:
-      MN_DEC_r(D);
+      MN_DEC_r(MN_Regs_D);
       break;
     case 0x1D:
-      MN_DEC_r(E);
+      MN_DEC_r(MN_Regs_E);
       break;
     case 0x25:
-      MN_DEC_r(H);
+      MN_DEC_r(MN_Regs_H);
       break;
     case 0x2D:
-      MN_DEC_r(L);
+      MN_DEC_r(MN_Regs_L);
       break;
     case 0x35:
       MN_DEC_HL();
