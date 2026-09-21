@@ -2,7 +2,7 @@
 #include "internal/memory.h"
 #include "internal/opcodes.h"
 
-void execute(MN_Emu *emu, mn_u8 opcode)
+void mn_emulator_execute(MN_Emu *emu, mn_u8 opcode)
 {
   switch (opcode)
   {
