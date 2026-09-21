@@ -18,6 +18,19 @@ mn_bool missingno_init(MissingNoCore* ctx, const mn_u8* buffer) {
     for (int i = 0; i < 0x200000; i++)
         ctx->ROM[i] = buffer[i];
 
+    MN_Cartridge_Type t = mn_startup_cartridge_type(ctx->ROM);
+
+    if (1 <= t && t <= 3)
+        ctx->mem.mbc_type = MN_MBC1;
+    else if (4 <= t && t <= 5)
+        ctx->mem.mbc_type = MN_MBC2;
+    else if (11 <= t && t <= 15)
+        ctx->mem.mbc_type = MN_MBC3;
+    else if (16 <= t && t <= 21)
+        ctx->mem.mbc_type = MN_MBC5;
+    else
+        ctx->mem.mbc_type = MN_MBCNONE;
+
     ctx->PC = 0x100;
     return MN_TRUE;
 }

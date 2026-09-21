@@ -2,7 +2,7 @@
 #define EMULATOR_H
 
 #include "MissingNo/MissingNo.h"
-#include "startup.h"
+#include "memory.h"
 
 typedef enum {
     A, F,
@@ -18,18 +18,7 @@ typedef struct MN_Emu {
     mn_u16 PC;
     mn_size cycles;
 
-    mn_u8 internal_mem[0x2000];
-    mn_u8 sec_internal_mem[0x7F];
-    mn_u8 cart_mem[0x20000];
-    mn_u8 VRAM[0x2000];
-    mn_u8 IO[0x7F];
-    mn_u8 SAB[0xA0];
-    mn_u8 interr_en;
-
-    MBC_Type mbc_type;
-    
-    mn_u16 ROM_bank;
-    mn_u16 RAM_bank;
+    MN_Mem_Data mem;
 } MN_Emu;
 
 

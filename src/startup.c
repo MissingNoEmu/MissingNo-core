@@ -92,20 +92,20 @@ void mn_startup_game_title(const mn_u8* ROM, char* buffer) {
     buffer[15] = '\0';
 }
 
-ROM_Type mn_startup_ROM_type(const mn_u8* ROM) {
+MN_ROM_Type mn_startup_ROM_type(const mn_u8* ROM) {
     switch (ROM[0x143]) {
         case 0x80:
-            return DUAL;
+            return MN_ROM_Type_Dual;
         case 0xC0:
-            return GBC;
+            return MN_ROM_Type_GBC;
         default:
-            return GB;
+            return MN_ROM_Type_GB;
     }
 }
 
-const char* mn_startup_ROM_type_name(ROM_Type t) {
+const char* mn_startup_ROM_type_name(MN_ROM_Type t) {
     static const char* names[] = {
-        "Dual mode Game Boy / Game Boy Color",
+        "MN_ROM_Type_Dual mode Game Boy / Game Boy Color",
         "Game Boy Color only",
         "Original Game Boy"
     };
@@ -113,7 +113,7 @@ const char* mn_startup_ROM_type_name(ROM_Type t) {
     return names[t];
 }
 
-Cartridge_Type mn_startup_cartridge_type(const mn_u8* ROM) {
+MN_Cartridge_Type mn_startup_cartridge_type(const mn_u8* ROM) {
     switch (ROM[0x147]) {
         case 0x0:
             return ROM_ONLY;
@@ -172,7 +172,7 @@ Cartridge_Type mn_startup_cartridge_type(const mn_u8* ROM) {
     }
 }
 
-const char* mn_startup_cartridge_type_name(Cartridge_Type t) {
+const char* mn_startup_cartridge_type_name(MN_Cartridge_Type t) {
     static const char* names[] = {
         "ROM_ONLY",
         "ROM_MBC1",
