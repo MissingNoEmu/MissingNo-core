@@ -11,6 +11,7 @@ add_library(MissingNo STATIC
     src/memory.c
     src/startup.c
     src/mbc.c
+    src/inputs.c
 )
 
 add_library(MissingNo::MissingNo ALIAS MissingNo)

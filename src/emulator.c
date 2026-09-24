@@ -2,7 +2,7 @@
 #include "internal/memory.h"
 #include "internal/opcodes.h"
 
-void mn_emulator_execute(MN_Emu *emu, mn_u8 opcode)
+void mn_emulator_execute_(MN_Emu *emu, mn_u8 opcode)
 {
   switch (opcode)
   {
@@ -704,4 +704,16 @@ void mn_emulator_execute(MN_Emu *emu, mn_u8 opcode)
       break;
     }
   }
+}
+
+mn_bool mn_emulator_execution_loop(MN_Emu *emu) {
+  if (emu->cycles) {
+    emu->cycles--;
+    return MN_TRUE;
+  }
+
+  mn_u8 opcode = mn_memory_read(emu, emu->PC++);
+  mn_emulator_execute_(emu, opcode);
+
+  return MN_TRUE;
 }

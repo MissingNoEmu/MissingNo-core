@@ -21,5 +21,6 @@ typedef struct MN_Emu {
     MN_Mem_Data mem;
 } MN_Emu;
 
+mn_bool mn_emulator_execution_loop(MN_Emu *emu);
 
 #endif
