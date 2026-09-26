@@ -5,8 +5,16 @@
 
 typedef struct MN_Emu MN_Emu;
 
-typedef struct {
+typedef enum {
+    MN_MBC1_Mode_16_8,
+    MN_MBC1_Mode_32_4
+} MN_MBC1_Mode;
 
+typedef struct {
+    MN_MBC1_Mode mode;
+    mn_u8 lo;
+    mn_u8 hi;
+    mn_bool ram_enabled;
 } MN_MBC1_Data;
 
 typedef struct {
