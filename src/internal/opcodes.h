@@ -3,6 +3,7 @@
 #include "internal/emulator.h"
 #include "internal/memory.h"
 
+// 4 cycles = 1 mmachine cycles
 // feel free to change the names, im js typing shi
 
 #define MN_GET_PAIR(emu, h, l) (emu->r[h] << 8) | emu->r[l]
@@ -48,6 +49,42 @@
     emu->cycles += 8;                                                          \
   }
 
+#define MN_LDD_A_HL()                                   \
+  {                                                     \
+    mn_u16 hl = MN_GET_PAIR(emu, MN_Regs_H, MN_Regs_L); \
+    emu->r[MN_Regs_A] = mn_memory_read(emu, hl);        \
+    hl--;                                               \
+    emu->r[MN_Regs_H] = hl >> 8;                        \
+    emu->r[MN_Regs_L] = hl & 0xFF;                      \
+    emu->cycles += 8;                                   \
+  }
+#define MN_LDD_HL_A()                                   \
+  {                                                     \
+    mn_u16 hl = MN_GET_PAIR(emu, MN_Regs_H, MN_Regs_L); \
+    mn_memory_write(emu, hl, emu->r[MN_Regs_A]);        \
+    hl--;                                               \
+    emu->r[MN_Regs_H] = hl >> 8;                        \
+    emu->r[MN_Regs_L] = hl & 0xFF;                      \
+    emu->cycles += 8;                                   \
+  }
+#define MN_LDI_A_HL()                                   \
+  {                                                     \
+    mn_u16 hl = MN_GET_PAIR(emu, MN_Regs_H, MN_Regs_L); \
+    emu->r[MN_Regs_A] = mn_memory_read(emu, hl);        \
+    hl++;                                               \
+    emu->r[MN_Regs_H] = hl >> 8;                        \
+    emu->r[MN_Regs_L] = hl & 0xFF;                      \
+    emu->cycles += 8;                                   \
+  }
+#define MN_LDI_HL_A()                                   \
+  {                                                     \
+    mn_u16 hl = MN_GET_PAIR(emu, MN_Regs_H, MN_Regs_L); \
+    mn_memory_write(emu, hl, emu->r[MN_Regs_A]);        \
+    hl++;                                               \
+    emu->r[MN_Regs_H] = hl >> 8;                        \
+    emu->r[MN_Regs_L] = hl & 0xFF;                      \
+    emu->cycles += 8;                                   \
+  }
 #define MN_ADD_r(src)                   \
   {                                     \
     mn_u8 a = emu->r[MN_Regs_A];        \

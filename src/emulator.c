@@ -2,7 +2,7 @@
 #include "internal/memory.h"
 #include "internal/opcodes.h"
 
-void mn_emulator_execute_(MN_Emu *emu, mn_u8 opcode)
+static void mn_emulator_execute_(MN_Emu *emu, mn_u8 opcode)
 {
   switch (opcode)
   {
@@ -262,19 +262,19 @@ void mn_emulator_execute_(MN_Emu *emu, mn_u8 opcode)
 
     // LDD MN_Regs_A,(HL) | LD MN_Regs_A,(HLD) | LD MN_Regs_A,(HL-)
     case 0x3A:
-      // incomplete ALU
+      MN_LDD_A_HL();
       break;
     // LDD (HL),MN_Regs_A | LD (HLD),MN_Regs_A | LD (HL-),MN_Regs_A
     case 0x32:
-      // incomplete
+      MN_LDD_HL_A();
       break;
     // LDI MN_Regs_A,(HL) | LD MN_Regs_A,(HLI) | LD MN_Regs_A,(HL+)
     case 0x2A:
-      // incomplete
+      MN_LDI_A_HL();
       break;
     // LDI (HL),MN_Regs_A | LD (HL),MN_Regs_A | LD (HL+),MN_Regs_A
     case 0x22:
-      // incomplete
+      MN_LDI_HL_A();
       break;
 
     // LDH (n),MN_Regs_A
@@ -404,7 +404,9 @@ void mn_emulator_execute_(MN_Emu *emu, mn_u8 opcode)
     case 0x9E:
       MN_SBC_HL();
       break;
-    // WHAT EH FUCK EVEN IS SBC # ?? opcode bruh sonion ring
+    case 0xDE:
+      MN_SBC_n();
+      break;
 
     // AND n
     case 0xA7:
