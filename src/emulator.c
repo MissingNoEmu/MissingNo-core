@@ -711,6 +711,7 @@ static void mn_emulator_execute_(MN_Emu *emu, mn_u8 opcode)
 mn_bool mn_emulator_execution_loop(MN_Emu *emu) {
   if (emu->cycles) {
     emu->cycles--;
+    mn_ppu_tick(emu);
     return MN_TRUE;
   }
 

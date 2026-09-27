@@ -2,7 +2,9 @@
 #define MISSING_NO_H
 
 typedef unsigned char mn_u8;
+typedef signed char mn_i8;
 typedef unsigned short mn_u16;
+typedef signed short mn_i16;
 typedef unsigned long long mn_size;
 
 typedef _Bool mn_bool;

@@ -3,6 +3,7 @@
 
 #include "MissingNo/MissingNo.h"
 #include "memory.h"
+#include "ppu.h"
 
 typedef enum {
     MN_Regs_A, MN_Regs_F,
@@ -19,6 +20,7 @@ typedef struct MN_Emu {
     mn_size cycles;
 
     MN_Mem_Data mem;
+    MN_PPU ppu;
 } MN_Emu;
 
 mn_bool mn_emulator_execution_loop(MN_Emu *emu);
