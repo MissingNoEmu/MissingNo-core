@@ -2,12 +2,16 @@
 #define PPU_H
 
 #include "MissingNo/MissingNo.h"
-#include "emulator.h"
 #include "memory.h"
+
+typedef struct MN_Emu MN_Emu;
 
 #define MN_HEIGHT 144
 #define MN_WIDTH 160
 #define MN_OAM_CYCLES 80
+#define MN_MIN_DRAW_CYCLES 172
+#define MN_SCANLINE_CYCLES 456
+
 typedef enum
 {
   MN_LCDC = 0xFF40,

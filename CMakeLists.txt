@@ -12,6 +12,7 @@ add_library(MissingNo STATIC
     src/startup.c
     src/mbc.c
     src/inputs.c
+    src/ppu.c
 )
 
 add_library(MissingNo::MissingNo ALIAS MissingNo)

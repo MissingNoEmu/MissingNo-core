@@ -1,4 +1,5 @@
 #include "internal/ppu.h"
+#include "internal/emulator.h"
 
 void mn_ppu_init(MN_PPU *ppu)
 {
@@ -19,10 +20,10 @@ void mn_ppu_init(MN_PPU *ppu)
   ppu->sprite_count = 0;
 }
 
-static inline mn_bool overlaps(MN_Sprite *sprite, mn_u8 LY){
-  if(LY >= (int)sprite->y - 16 && LY < (int)sprite->y - 8)
-    return MN_TRUE;
-  else return MN_FALSE;
+static inline mn_bool overlaps(MN_Sprite *sprite, mn_u8 LY, mn_bool tall){
+  mn_i16 y = (mn_i16)sprite->y - 16;
+  mn_i16 height = tall ? 16 : 8;
+  return LY >= y && LY < y + height;
 }
 
 static inline MN_Sprite oam_read_sprite(MN_Emu *emu, mn_u8 i){
@@ -37,7 +38,7 @@ static void oam_scan(MN_Emu *emu, MN_PPU *ppu){
     if(ppu->sprite_count == 10)
       break;
     MN_Sprite sprite = oam_read_sprite(emu, i);
-    if(overlaps(&sprite, ppu->LY)){
+    if(overlaps(&sprite, ppu->LY, (mn_bool)(ppu->LCDC & 0x04))){
       ppu->sprites[ppu->sprite_count++] = sprite;
     }
   }
@@ -68,47 +69,115 @@ static void draw_scanline(MN_Emu *emu, MN_PPU *ppu){
     }
   }
   if(ppu->LCDC & 0b00000100){
-    // 8x16
-  }
-  else
-  for (mn_u8 i = 0; i < ppu->sprite_count; i++)
-  {
-    mn_u8 row = ppu->LY - (mn_i16)ppu->sprites[i].y + 16;
-    mn_u16 tile_addr = 0x8000 + ppu->sprites[i].tile * 16;
-    mn_u8 low = mn_memory_read(emu, tile_addr + 2 * row);
-    mn_u8 high = mn_memory_read(emu, tile_addr + 2 * row + 1);
-
-    for (mn_u8 s = 0; s < 8; s++)
+    for (mn_u8 i = 0; i < ppu->sprite_count; i++)
     {
-      mn_i16 px = (mn_i16)ppu->sprites[i].x - 8 + s;
-      if (px < 0 || px >= MN_WIDTH)
-        continue;
-      mn_u8 bit = 7 - s;
-      if (ppu->sprites[i].attributes & 0x20)
-        bit = s;
-      mn_u8 color = ((high >> bit) & 1) << 1 | ((low >> bit) & 1);
-      ppu->framebuffer[ppu->LY * MN_WIDTH + ppu->sprites[i].x - 8 + s] = color;
+      mn_u8 row = ppu->LY - (mn_i16)ppu->sprites[i].y + 16;
+      if (ppu->sprites[i].attributes & 0b01000000)
+        row = 15 - row;
+      mn_u8 tile = ppu->sprites[i].tile & 0xFE;
+      if (row >= 8)
+        tile++;
+      mn_u8 tile_row = row & 7;
+      mn_u16 tile_addr = 0x8000 + tile * 16;
+      mn_u8 low = mn_memory_read(emu, tile_addr + 2 * tile_row);
+      mn_u8 high = mn_memory_read(emu, tile_addr + 2 * tile_row + 1);
+    
+      for (mn_u8 s = 0; s < 8; s++)
+      {
+        mn_i16 px = (mn_i16)ppu->sprites[i].x - 8 + s;
+        if (px < 0 || px >= MN_WIDTH)
+          continue;
+        mn_u8 bit = 7 - s;
+        if (ppu->sprites[i].attributes & 0x20)
+          bit = s;
+        mn_u8 color = ((high >> bit) & 1) << 1 | ((low >> bit) & 1);
+        if (color == 0)
+          continue;
+        if ((ppu->sprites[i].attributes & 0x80) && color != 0)
+        {
+          mn_u8 bg_color =
+            ppu->framebuffer[ppu->LY * MN_WIDTH + px];
+
+          if (bg_color != 0)
+            continue;
+        }
+        ppu->framebuffer[ppu->LY * MN_WIDTH + px] = color;
+      }
     }
   }
+  else
+    for (mn_u8 i = 0; i < ppu->sprite_count; i++)
+    {
+      mn_u8 row = ppu->LY - (mn_i16)ppu->sprites[i].y + 16;
+      if (ppu->sprites[i].attributes & 0b01000000)
+        row = 7 - row;
+      mn_u16 tile_addr = 0x8000 + ppu->sprites[i].tile * 16;
+      mn_u8 low = mn_memory_read(emu, tile_addr + 2 * row);
+      mn_u8 high = mn_memory_read(emu, tile_addr + 2 * row + 1);
+
+      for (mn_u8 s = 0; s < 8; s++)
+      {
+        mn_i16 px = (mn_i16)ppu->sprites[i].x - 8 + s;
+        if (px < 0 || px >= MN_WIDTH)
+          continue;
+        mn_u8 bit = 7 - s;
+        if (ppu->sprites[i].attributes & 0x20)
+          bit = s;
+        mn_u8 color = ((high >> bit) & 1) << 1 | ((low >> bit) & 1);
+        if (color == 0)
+          continue;
+        if ((ppu->sprites[i].attributes & 0x80) && color != 0)
+        {
+          mn_u8 bg_color =
+            ppu->framebuffer[ppu->LY * MN_WIDTH + px];
+            
+          if (bg_color != 0)
+            continue;
+        }
+        ppu->framebuffer[ppu->LY * MN_WIDTH + px] = color;
+      }
+    }
 }
 
-// will change to mn_ppu_tick(MN_Emu *emu) and use emu->ppu later
-void mn_ppu_tick(MN_Emu *emu, MN_PPU *ppu){
-  ppu->mode_clock = emu->cycles;
+// NOT CYCLE ACCURATE
+void mn_ppu_tick(MN_Emu *emu){
+  MN_PPU *ppu = &emu->ppu;
+  ppu->mode_clock++;
   switch (ppu->mode)
   {
   case MN_OAM_scan:
-    if(ppu->mode_clock <= MN_OAM_CYCLES){
+    if(ppu->mode_clock >= MN_OAM_CYCLES){
       oam_scan(emu, ppu);
       ppu->mode = MN_HDraw;
       ppu->mode_clock = 0;
     }
     break;
   case MN_HDraw:
+    if(ppu->mode_clock >= MN_MIN_DRAW_CYCLES){
+      draw_scanline(emu, ppu);
+      ppu->mode = MN_HBlank;
+      ppu->mode_clock = 0;
+    }
     break;
   case MN_HBlank:
+    ppu->LY++;
+    if (ppu->LY == MN_HEIGHT) {
+      ppu->mode = MN_VBlank;
+    }
+    else
+      ppu->mode = MN_OAM_scan;
+    ppu->mode_clock = 0;
     break;
   case MN_VBlank:
+      if (ppu->mode_clock >= MN_SCANLINE_CYCLES) {
+        ppu->mode_clock = 0;
+        ppu->LY++;
+
+        if (ppu->LY > 153) {
+            ppu->LY = 0;
+            ppu->mode = MN_OAM_scan;
+        }
+    }
     break;
   default:
     break;
