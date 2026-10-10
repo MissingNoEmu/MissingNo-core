@@ -38,12 +38,29 @@ static void mn_mbc1_write_(MN_Emu* emu, mn_u16 loc, mn_u8 val) {
         data->mode = val & ((mn_u8)1);
 }
 
+static void mn_mbc2_write_(MN_Emu* emu, mn_u16 loc, mn_u8 val) {
+    MN_MBC2_Data* data = &emu->mem.mbc_data.MBC2;
+    mn_u8 A8 = (mn_u8)((loc & 0x0100) >> 8);
+
+    if (0x0 <= loc && loc < 0x4000) {
+        if (A8) {
+            if (!val)
+                val++;
+
+            emu->mem.ROM_bank = (val & 0x0F) * 0x4000;
+        }
+        else {
+            data->ram_enabled = ((val & 0x0F) == 0x0A);
+        }
+    }
+}
+
 void mn_mbc_write(MN_Emu* emu, mn_u16 loc, mn_u8 val) {
     switch (emu->mem.mbc_type) {
     case MN_MBC1:
         mn_mbc1_write_(emu, loc, val);
     case MN_MBC2:
-        break;
+        mn_mbc2_write_(emu, loc, val);
     case MN_MBC3:
         break;
     case MN_MBC5:

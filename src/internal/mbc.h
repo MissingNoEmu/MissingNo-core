@@ -18,7 +18,7 @@ typedef struct {
 } MN_MBC1_Data;
 
 typedef struct {
-
+    mn_bool ram_enabled;
 } MN_MBC2_Data;
 
 typedef struct {
