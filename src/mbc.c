@@ -129,3 +129,34 @@ void mn_mbc_write(MN_Emu* emu, mn_u16 loc, mn_u8 val) {
         break;
     }
 }
+
+mn_u8 mn_mbc_ram_read(MN_Emu* emu, mn_u16 loc) {
+    MN_Mem_Data* mem = &emu->mem;
+
+    switch (mem->mbc_type) {
+    case MN_MBC1:
+        if (!mem->mbc_data.MBC1.ram_enabled) return 0xFF;
+        return mem->cart_mem[mem->RAM_bank + loc - 0xA000];
+
+    case MN_MBC2:
+        if (!mem->mbc_data.MBC2.ram_enabled) return 0xFF;
+        return mem->cart_mem[(loc - 0xA000) & 0x01FF] | 0xF0;
+
+    case MN_MBC3: {
+        MN_MBC3_Data* data = &mem->mbc_data.MBC3;
+        if (!data->ram_rtc_enabled) return 0xFF;
+        if (data->ram_rtc_select <= 0x03)
+            return mem->cart_mem[mem->RAM_bank + loc - 0xA000];
+        if (data->ram_rtc_select >= 0x08 && data->ram_rtc_select <= 0x0C)
+            return data->latched_regs[data->ram_rtc_select - 0x08];
+        return 0xFF;
+    }
+
+    case MN_MBC5:
+        if (!mem->mbc_data.MBC5.ram_enabled) return 0xFF;
+        return mem->cart_mem[mem->RAM_bank + loc - 0xA000];
+
+    default:
+        return 0xFF;
+    }
+}

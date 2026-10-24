@@ -46,5 +46,6 @@ typedef union {
 
 
 void mn_mbc_write(MN_Emu* emu, mn_u16 loc, mn_u8 val);
+mn_u8 mn_mbc_ram_read(MN_Emu* emu, mn_u16 loc);
 
 #endif

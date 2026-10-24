@@ -15,7 +15,7 @@ mn_u8 mn_memory_read(MN_Emu* emu, mn_u16 loc) {
         return mem->VRAM[loc - 0x8000];
 
     else if (loc < 0xC000)
-        return mem->cart_mem[mem->RAM_bank + loc - 0xA000];
+        return mn_mbc_ram_read(emu, loc);
 
     else if (loc < 0xE000)
         return mem->internal_mem[loc - 0xC000];

@@ -19,8 +19,8 @@ typedef struct {
     MN_MBC_Type mbc_type;
     MN_MBC_Data mbc_data;
 
-    mn_u16 ROM_bank;
-    mn_u16 RAM_bank;
+    mn_size ROM_bank;
+    mn_size RAM_bank;
 } MN_Mem_Data;
 
 mn_u8 mn_memory_read(MN_Emu* emu, mn_u16 loc);
