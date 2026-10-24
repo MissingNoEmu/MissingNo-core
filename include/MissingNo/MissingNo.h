@@ -38,6 +38,6 @@ mn_size missingno_core_size(void);
 mn_bool missingno_init(MissingNoCore* ctx, const mn_u8* buffer);
 MissingNo_Verification missingno_verify(MissingNoCore* ctx);
 void missingno_game_title(MissingNoCore* ctx, char* write_back_buffer);
-mn_bool missingno_tick(MissingNoCore* ctx, const MissingNoInputs* inputs);
+void missingno_tick(MissingNoCore* ctx, const MissingNoInputs* inputs);
 
 #endif

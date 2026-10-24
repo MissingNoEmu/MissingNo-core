@@ -7,6 +7,9 @@ mn_u8 mn_memory_read(MN_Emu* emu, mn_u16 loc) {
 
     if (loc < 0x4000)
         return emu->ROM[loc];
+
+    else if (loc < 0x8000)
+        return emu->ROM[mem->ROM_bank + loc - 0x4000];
     
     else if (loc < 0xA000)
         return mem->VRAM[loc - 0x8000];
@@ -44,9 +47,6 @@ void mn_memory_write(MN_Emu* emu, mn_u16 loc, mn_u8 val) {
 
     if (loc < 0x8000)
         mn_mbc_write(emu, loc, val);
-    
-    else if (loc < 0x8000)
-        emu->ROM[mem->ROM_bank + loc - 0x4000] = val;
 
     else if (loc < 0xA000)
         mem->VRAM[loc - 0x8000] = val;

@@ -3,7 +3,7 @@
 #include "internal/emulator.h"
 #include "internal/memory.h"
 
-// 4 cycles = 1 mmachine cycles
+// 4 cpu_cycles = 1 mmachine cpu_cycles
 // feel free to change the names, im js typing shi
 
 #define MN_GET_PAIR(emu, h, l) (emu->r[h] << 8) | emu->r[l]
@@ -11,42 +11,42 @@
 #define MN_LD_nn_n(dest)                           \
   {                                                \
     emu->r[dest] = mn_memory_read(emu, emu->PC++); \
-    emu->cycles += 8;                              \
+    emu->cpu_cycles += 8;                              \
   }
 #define MN_LD_r1_r2(dest, src)  \
   {                             \
     emu->r[dest] = emu->r[src]; \
-    emu->cycles += 4;           \
+    emu->cpu_cycles += 4;           \
   }
 #define MN_LD_r_HL(dest)                                                        \
   {                                                                             \
     emu->r[dest] = mn_memory_read(emu, MN_GET_PAIR(emu, MN_Regs_H, MN_Regs_L)); \
-    emu->cycles += 8;                                                           \
+    emu->cpu_cycles += 8;                                                           \
   }
 #define MN_LD_HL_r(src)                                                        \
   {                                                                            \
     mn_memory_write(emu, MN_GET_PAIR(emu, MN_Regs_H, MN_Regs_L), emu->r[src]); \
-    emu->cycles += 8;                                                          \
+    emu->cpu_cycles += 8;                                                          \
   }
 #define MN_LD_r_BC(dest)                                                        \
   {                                                                             \
     emu->r[dest] = mn_memory_read(emu, MN_GET_PAIR(emu, MN_Regs_B, MN_Regs_C)); \
-    emu->cycles += 8;                                                           \
+    emu->cpu_cycles += 8;                                                           \
   }
 #define MN_LD_r_DE(dest)                                                        \
   {                                                                             \
     emu->r[dest] = mn_memory_read(emu, MN_GET_PAIR(emu, MN_Regs_D, MN_Regs_E)); \
-    emu->cycles += 8;                                                           \
+    emu->cpu_cycles += 8;                                                           \
   }
 #define MN_LD_BC_r(src)                                                        \
   {                                                                            \
     mn_memory_write(emu, MN_GET_PAIR(emu, MN_Regs_B, MN_Regs_C), emu->r[src]); \
-    emu->cycles += 8;                                                          \
+    emu->cpu_cycles += 8;                                                          \
   }
 #define MN_LD_DE_r(src)                                                        \
   {                                                                            \
     mn_memory_write(emu, MN_GET_PAIR(emu, MN_Regs_D, MN_Regs_E), emu->r[src]); \
-    emu->cycles += 8;                                                          \
+    emu->cpu_cycles += 8;                                                          \
   }
 
 #define MN_LDD_A_HL()                                   \
@@ -56,7 +56,7 @@
     hl--;                                               \
     emu->r[MN_Regs_H] = hl >> 8;                        \
     emu->r[MN_Regs_L] = hl & 0xFF;                      \
-    emu->cycles += 8;                                   \
+    emu->cpu_cycles += 8;                                   \
   }
 #define MN_LDD_HL_A()                                   \
   {                                                     \
@@ -65,7 +65,7 @@
     hl--;                                               \
     emu->r[MN_Regs_H] = hl >> 8;                        \
     emu->r[MN_Regs_L] = hl & 0xFF;                      \
-    emu->cycles += 8;                                   \
+    emu->cpu_cycles += 8;                                   \
   }
 #define MN_LDI_A_HL()                                   \
   {                                                     \
@@ -74,7 +74,7 @@
     hl++;                                               \
     emu->r[MN_Regs_H] = hl >> 8;                        \
     emu->r[MN_Regs_L] = hl & 0xFF;                      \
-    emu->cycles += 8;                                   \
+    emu->cpu_cycles += 8;                                   \
   }
 #define MN_LDI_HL_A()                                   \
   {                                                     \
@@ -83,7 +83,7 @@
     hl++;                                               \
     emu->r[MN_Regs_H] = hl >> 8;                        \
     emu->r[MN_Regs_L] = hl & 0xFF;                      \
-    emu->cycles += 8;                                   \
+    emu->cpu_cycles += 8;                                   \
   }
 #define MN_ADD_r(src)                   \
   {                                     \
@@ -101,7 +101,7 @@
     if (result > 0xFF)                  \
       emu->r[MN_Regs_F] |= (1 << 4);    \
                                         \
-    emu->cycles += 4;                   \
+    emu->cpu_cycles += 4;                   \
   }
 #define MN_ADD_HL()                                                        \
   {                                                                        \
@@ -119,7 +119,7 @@
     if (result > 0xFF)                                                     \
       emu->r[MN_Regs_F] |= (1 << 4);                                       \
                                                                            \
-    emu->cycles += 8;                                                      \
+    emu->cpu_cycles += 8;                                                      \
   }
 #define MN_ADD_n()                            \
   {                                           \
@@ -137,7 +137,7 @@
     if (result > 0xFF)                        \
       emu->r[MN_Regs_F] |= (1 << 4);          \
                                               \
-    emu->cycles += 8;                         \
+    emu->cpu_cycles += 8;                         \
   }
 
 #define MN_ADC_r(src)                       \
@@ -157,7 +157,7 @@
     if (result > 0xFF)                      \
       emu->r[MN_Regs_F] |= (1 << 4);        \
                                             \
-    emu->cycles += 4;                       \
+    emu->cpu_cycles += 4;                       \
   }
 #define MN_ADC_HL()                                                        \
   {                                                                        \
@@ -176,7 +176,7 @@
     if (result > 0xFF)                                                     \
       emu->r[MN_Regs_F] |= (1 << 4);                                       \
                                                                            \
-    emu->cycles += 8;                                                      \
+    emu->cpu_cycles += 8;                                                      \
   }
 #define MN_ADC_n()                            \
   {                                           \
@@ -195,7 +195,7 @@
     if (result > 0xFF)                        \
       emu->r[MN_Regs_F] |= (1 << 4);          \
                                               \
-    emu->cycles += 8;                         \
+    emu->cpu_cycles += 8;                         \
   }
 #define MN_SUB_r(src)                \
   {                                  \
@@ -211,7 +211,7 @@
       emu->r[MN_Regs_F] |= (1 << 4); \
     if ((a & 0x0F) < (b & 0x0F))     \
       emu->r[MN_Regs_F] |= (1 << 5); \
-    emu->cycles += 4;                \
+    emu->cpu_cycles += 4;                \
   }
 #define MN_SUB_HL()                                                        \
   {                                                                        \
@@ -227,7 +227,7 @@
       emu->r[MN_Regs_F] |= (1 << 4);                                       \
     if ((a & 0x0F) < (b & 0x0F))                                           \
       emu->r[MN_Regs_F] |= (1 << 5);                                       \
-    emu->cycles += 8;                                                      \
+    emu->cpu_cycles += 8;                                                      \
   }
 #define MN_SUB_n()                            \
   {                                           \
@@ -243,7 +243,7 @@
       emu->r[MN_Regs_F] |= (1 << 4);          \
     if ((a & 0x0F) < (b & 0x0F))              \
       emu->r[MN_Regs_F] |= (1 << 5);          \
-    emu->cycles += 8;                         \
+    emu->cpu_cycles += 8;                         \
   }
 #define MN_SBC_r(src)                       \
   {                                         \
@@ -260,7 +260,7 @@
       emu->r[MN_Regs_F] |= (1 << 4);        \
     if ((a & 0x0F) < (b & 0x0F) + c)        \
       emu->r[MN_Regs_F] |= (1 << 5);        \
-    emu->cycles += 4;                       \
+    emu->cpu_cycles += 4;                       \
   }
 #define MN_SBC_HL()                                                        \
   {                                                                        \
@@ -277,7 +277,7 @@
       emu->r[MN_Regs_F] |= (1 << 4);                                       \
     if ((a & 0x0F) < (b & 0x0F) + c)                                       \
       emu->r[MN_Regs_F] |= (1 << 5);                                       \
-    emu->cycles += 8;                                                      \
+    emu->cpu_cycles += 8;                                                      \
   }
 #define MN_SBC_n()                            \
   {                                           \
@@ -294,7 +294,7 @@
       emu->r[MN_Regs_F] |= (1 << 4);          \
     if ((a & 0x0F) < (b & 0x0F) + c)          \
       emu->r[MN_Regs_F] |= (1 << 5);          \
-    emu->cycles += 8;                         \
+    emu->cpu_cycles += 8;                         \
   }
 
 #define MN_AND_r(src)                 \
@@ -304,7 +304,7 @@
     if (emu->r[MN_Regs_A] == 0)       \
       emu->r[MN_Regs_F] |= (1 << 7);  \
     emu->r[MN_Regs_F] |= (1 << 5);    \
-    emu->cycles += 4;                 \
+    emu->cpu_cycles += 4;                 \
   }
 #define MN_AND_HL()                                                                   \
   {                                                                                   \
@@ -313,7 +313,7 @@
     if (emu->r[MN_Regs_A] == 0)                                                       \
       emu->r[MN_Regs_F] |= (1 << 7);                                                  \
     emu->r[MN_Regs_F] |= (1 << 5);                                                    \
-    emu->cycles += 8;                                                                 \
+    emu->cpu_cycles += 8;                                                                 \
   }
 #define MN_AND_n()                                       \
   {                                                      \
@@ -322,7 +322,7 @@
     if (emu->r[MN_Regs_A] == 0)                          \
       emu->r[MN_Regs_F] |= (1 << 7);                     \
     emu->r[MN_Regs_F] |= (1 << 5);                       \
-    emu->cycles += 8;                                    \
+    emu->cpu_cycles += 8;                                    \
   }
 
 #define MN_OR_r(src)                  \
@@ -331,7 +331,7 @@
     emu->r[MN_Regs_F] = 0;            \
     if (emu->r[MN_Regs_A] == 0)       \
       emu->r[MN_Regs_F] |= (1 << 7);  \
-    emu->cycles += 4;                 \
+    emu->cpu_cycles += 4;                 \
   }
 #define MN_OR_HL()                                                                    \
   {                                                                                   \
@@ -339,7 +339,7 @@
     emu->r[MN_Regs_F] = 0;                                                            \
     if (emu->r[MN_Regs_A] == 0)                                                       \
       emu->r[MN_Regs_F] |= (1 << 7);                                                  \
-    emu->cycles += 8;                                                                 \
+    emu->cpu_cycles += 8;                                                                 \
   }
 #define MN_OR_n()                                        \
   {                                                      \
@@ -347,7 +347,7 @@
     emu->r[MN_Regs_F] = 0;                               \
     if (emu->r[MN_Regs_A] == 0)                          \
       emu->r[MN_Regs_F] |= (1 << 7);                     \
-    emu->cycles += 8;                                    \
+    emu->cpu_cycles += 8;                                    \
   }
 #define MN_XOR_r(src)                 \
   {                                   \
@@ -355,7 +355,7 @@
     emu->r[MN_Regs_F] = 0;            \
     if (emu->r[MN_Regs_A] == 0)       \
       emu->r[MN_Regs_F] |= (1 << 7);  \
-    emu->cycles += 4;                 \
+    emu->cpu_cycles += 4;                 \
   }
 #define MN_XOR_HL()                                                                   \
   {                                                                                   \
@@ -363,7 +363,7 @@
     emu->r[MN_Regs_F] = 0;                                                            \
     if (emu->r[MN_Regs_A] == 0)                                                       \
       emu->r[MN_Regs_F] |= (1 << 7);                                                  \
-    emu->cycles += 8;                                                                 \
+    emu->cpu_cycles += 8;                                                                 \
   }
 #define MN_XOR_n()                                       \
   {                                                      \
@@ -371,7 +371,7 @@
     emu->r[MN_Regs_F] = 0;                               \
     if (emu->r[MN_Regs_A] == 0)                          \
       emu->r[MN_Regs_F] |= (1 << 7);                     \
-    emu->cycles += 8;                                    \
+    emu->cpu_cycles += 8;                                    \
   }
 
 #define MN_CP_r(src)                                       \
@@ -385,7 +385,7 @@
     if ((emu->r[MN_Regs_A] & 0x0F) < (emu->r[src] & 0x0F)) \
       emu->r[MN_Regs_F] |= (1 << 5);                       \
                                                            \
-    emu->cycles += 4;                                      \
+    emu->cpu_cycles += 4;                                      \
   }
 #define MN_CP_HL()                                                         \
   {                                                                        \
@@ -399,7 +399,7 @@
     if ((emu->r[MN_Regs_A] & 0x0F) < (b & 0x0F))                           \
       emu->r[MN_Regs_F] |= (1 << 5);                                       \
                                                                            \
-    emu->cycles += 8;                                                      \
+    emu->cpu_cycles += 8;                                                      \
   }
 #define MN_CP_n()                                \
   {                                              \
@@ -412,7 +412,7 @@
       emu->r[MN_Regs_F] |= (1 << 4);             \
     if ((emu->r[MN_Regs_A] & 0x0F) < (b & 0x0F)) \
       emu->r[MN_Regs_F] |= (1 << 5);             \
-    emu->cycles += 8;                            \
+    emu->cpu_cycles += 8;                            \
   }
 
 #define MN_INC_r(src)                \
@@ -423,7 +423,7 @@
       emu->r[MN_Regs_F] |= (1 << 7); \
     if ((emu->r[src] & 0x0F) == 0)   \
       emu->r[MN_Regs_F] |= (1 << 5); \
-    emu->cycles += 4;                \
+    emu->cpu_cycles += 4;                \
   }
 
 #define MN_INC_HL()                                                         \
@@ -435,7 +435,7 @@
       emu->r[MN_Regs_F] |= (1 << 7);                                        \
     if ((hl & 0x0F) == 0)                                                   \
       emu->r[MN_Regs_F] |= (1 << 5);                                        \
-    emu->cycles += 12;                                                      \
+    emu->cpu_cycles += 12;                                                      \
   }
 
 #define MN_DEC_r(src)                 \
@@ -447,7 +447,7 @@
     emu->r[MN_Regs_F] |= (1 << 6);    \
     if ((emu->r[src] & 0x0F) == 0x0F) \
       emu->r[MN_Regs_F] |= (1 << 5);  \
-    emu->cycles += 4;                 \
+    emu->cpu_cycles += 4;                 \
   }
 
 #define MN_DEC_HL()                                                         \
@@ -460,7 +460,7 @@
     emu->r[MN_Regs_F] |= (1 << 6);                                          \
     if ((hl & 0x0F) == 0x0F)                                                \
       emu->r[MN_Regs_F] |= (1 << 5);                                        \
-    emu->cycles += 12;                                                      \
+    emu->cpu_cycles += 12;                                                      \
   }
 
 #define MN_SWAP_r(src)                                                   \
@@ -469,7 +469,7 @@
     emu->r[MN_Regs_F] = 0;                                               \
     if (emu->r[src] == 0)                                                \
       emu->r[MN_Regs_F] |= (1 << 7);                                     \
-    emu->cycles += 8;                                                    \
+    emu->cpu_cycles += 8;                                                    \
   }
 
 #define MN_SWAP_HL()                                                        \
@@ -479,7 +479,7 @@
     emu->r[MN_Regs_F] = 0;                                                  \
     if (hl == 0)                                                            \
       emu->r[MN_Regs_F] |= (1 << 7);                                        \
-    emu->cycles += 16;                                                      \
+    emu->cpu_cycles += 16;                                                      \
   }
 
 // aap karlo
@@ -487,7 +487,7 @@
 #define MN_CPL()
 #define MN_CCF()
 #define MN_SCF()
-#define MN_NOP() emu->cycles += 4;
+#define MN_NOP() emu->cpu_cycles += 4;
 #define MN_HALT()
 #define MN_STOP()
 #define MN_DI()
@@ -524,7 +524,7 @@
     else                              \
       emu->r[MN_Regs_F] |= (1 << 7);  \
     emu->r[MN_Regs_F] |= (1 << 5);    \
-    emu->cycles += 8;                 \
+    emu->cpu_cycles += 8;                 \
   }
 #define MN_BIT_b_HL(bit)                                                          \
   {                                                                               \
@@ -534,33 +534,33 @@
     else                                                                          \
       emu->r[MN_Regs_F] |= (1 << 7);                                              \
     emu->r[MN_Regs_F] |= (1 << 5);                                                \
-    emu->cycles += 16;                                                            \
+    emu->cpu_cycles += 16;                                                            \
   }
 
 #define MN_SET_b_r(bit, src)   \
   {                            \
     emu->r[src] |= (1 << bit); \
-    emu->cycles += 8;          \
+    emu->cpu_cycles += 8;          \
   }
 #define MN_SET_b_HL(bit)                                                    \
   {                                                                         \
     mn_u8 hl = mn_memory_read(emu, MN_GET_PAIR(emu, MN_Regs_H, MN_Regs_L)); \
     hl |= (1 << bit);                                                       \
     mn_memory_write(emu, MN_GET_PAIR(emu, MN_Regs_H, MN_Regs_L), hl);       \
-    emu->cycles += 16;                                                      \
+    emu->cpu_cycles += 16;                                                      \
   }
 
 #define MN_RES_b_r(bit, src)    \
   {                             \
     emu->r[src] &= ~(1 << bit); \
-    emu->cycles += 8;           \
+    emu->cpu_cycles += 8;           \
   }
 #define MN_RES_b_HL(bit)                                                    \
   {                                                                         \
     mn_u8 hl = mn_memory_read(emu, MN_GET_PAIR(emu, MN_Regs_H, MN_Regs_L)); \
     hl &= ~(1 << bit);                                                      \
     mn_memory_write(emu, MN_GET_PAIR(emu, MN_Regs_H, MN_Regs_L), hl);       \
-    emu->cycles += 16;                                                      \
+    emu->cpu_cycles += 16;                                                      \
   }
 
 // Abh kud kudke batao, alkene alkane aur alkyne ka samband;

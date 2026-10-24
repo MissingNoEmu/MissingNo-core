@@ -201,7 +201,7 @@ static void mn_emulator_execute_(MN_Emu *emu, mn_u8 opcode)
       break;
     case 0x36:
       mn_memory_write(emu, MN_GET_PAIR(emu, MN_Regs_H, MN_Regs_L), mn_memory_read(emu, emu->PC++));
-      emu->cycles += 12;
+      emu->cpu_cycles += 12;
       break;
 
     // LD MN_Regs_A, n
@@ -245,19 +245,19 @@ static void mn_emulator_execute_(MN_Emu *emu, mn_u8 opcode)
       break;
     case 0xEA:
       // (nn) walo ka aap dekhlo dots
-      emu->cycles += 16;
+      emu->cpu_cycles += 16;
       break;
 
     // LD MN_Regs_A,(MN_Regs_C)
     case 0xF2:
       emu->r[MN_Regs_A] = mn_memory_read(emu, 0xFF00 + emu->r[MN_Regs_C]);
-      emu->cycles += 8;
+      emu->cpu_cycles += 8;
       break;
 
     // LD (MN_Regs_C),MN_Regs_A
     case 0xE2:
       mn_memory_write(emu, 0xFF00 + emu->r[MN_Regs_C], emu->r[MN_Regs_A]);
-      emu->cycles += 8;
+      emu->cpu_cycles += 8;
       break;
 
     // LDD MN_Regs_A,(HL) | LD MN_Regs_A,(HLD) | LD MN_Regs_A,(HL-)
@@ -280,13 +280,13 @@ static void mn_emulator_execute_(MN_Emu *emu, mn_u8 opcode)
     // LDH (n),MN_Regs_A
     case 0xE0:
       mn_memory_write(emu, 0xFF00 + mn_memory_read(emu, emu->PC++), emu->r[MN_Regs_A]);
-      emu->cycles += 12;
+      emu->cpu_cycles += 12;
       break;
 
     // LDH MN_Regs_A,(n)
     case 0xF0:
       emu->r[MN_Regs_A] = mn_memory_read(emu, 0xFF00 + mn_memory_read(emu, emu->PC++));
-      emu->cycles += 12;
+      emu->cpu_cycles += 12;
       break;
     }
 
@@ -708,15 +708,12 @@ static void mn_emulator_execute_(MN_Emu *emu, mn_u8 opcode)
   }
 }
 
-mn_bool mn_emulator_execution_loop(MN_Emu *emu) {
-  if (emu->cycles) {
-    emu->cycles--;
-    mn_ppu_tick(emu);
-    return MN_TRUE;
+void mn_emulator_execution_loop(MN_Emu *emu) {
+  if (emu->cpu_cycles) {
+    emu->cpu_cycles--;
+    return;
   }
 
   mn_u8 opcode = mn_memory_read(emu, emu->PC++);
   mn_emulator_execute_(emu, opcode);
-
-  return MN_TRUE;
 }

@@ -2,6 +2,7 @@
 #include "internal/emulator.h"
 #include "internal/startup.h"
 #include "internal/inputs.h"
+#include "ppu.h"
 
 mn_size missingno_cartROM_size(const mn_u8* buffer) {
     return mn_startup_ROM_size(buffer);
@@ -53,7 +54,8 @@ void missingno_game_title(MissingNoCore* ctx, char* write_back_buffer) {
     mn_startup_game_title(ctx->ROM, write_back_buffer);
 }
 
-mn_bool missingno_tick(MissingNoCore* ctx, const MissingNoInputs* inputs) {
+void missingno_tick(MissingNoCore* ctx, const MissingNoInputs* inputs) {
     mn_inputs_update(ctx, inputs);
-    return mn_emulator_execution_loop(ctx);
+    mn_emulator_execution_loop(ctx);
+    mn_ppu_tick(ctx);
 }
