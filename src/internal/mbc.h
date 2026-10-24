@@ -22,11 +22,19 @@ typedef struct {
 } MN_MBC2_Data;
 
 typedef struct {
-
+    mn_u8 rom_bank;
+    mn_u8 ram_rtc_select;
+    mn_u8 latch_state;
+    mn_u8 rtc_regs[5];
+    mn_u8 latched_regs[5];
+    mn_bool ram_rtc_enabled;
 } MN_MBC3_Data;
 
 typedef struct {
-
+    mn_u8 rom_bank_lo;
+    mn_u8 rom_bank_hi;
+    mn_u8 ram_bank;
+    mn_bool ram_enabled;
 } MN_MBC5_Data;
 
 typedef union {
